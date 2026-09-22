@@ -4,7 +4,7 @@
 
 This project focuses on building an interactive Business Performance Intelligence Dashboard using Microsoft Power BI.
 
-The objective was to transform raw retail sales data into an interactive business intelligence solution that allows management to understand:
+The objective was to transform raw sales data into an interactive business intelligence solution that allows management to understand:
 
 * How the business is performing
 * What is driving revenue and profitability
@@ -82,13 +82,13 @@ Used to create business metrics and calculations such as:
 * Total Quantity
 * Total Cost
 * Total Profit
-* Profit Margin
+* Profit Margin %
 * Total Orders
-* Total Cost
 * Total Products
 * Average Order Value
-* Sales Growth
+* Sales Growth %
 * Previous Month Sales
+* Previous Year Sales
 * Average Quantity per Order
 
 #### Excel
@@ -139,7 +139,11 @@ Contained customer information including:
 
 #### Dim_Employees
 
-Contained salesperson/employee information.
+* Employer ID
+* Employee Name
+* Department
+* Job Level
+* Region
 
 #### Dim_Date
 
@@ -149,12 +153,13 @@ A dedicated date dimension used for time-based analysis such as:
 * Quarter
 * Month
 * Month Number
+* Month Name
 
 The dataset covers sales activity across 2024–2026.
 
 ## Data Preparation 
 
-Before building the dashboard, the dataset was inspected and cleaned to improve data quality and ensure that the analysis was reliable.
+Before building the dashboard, the dataset was cleaned to improve data quality and ensure that the analysis was reliable.
 
 1. Checked Data Types
 
@@ -181,7 +186,6 @@ Blank values were identified across the dataset.
 
 Examples included:
 
-* Missing Customer IDs
 * Missing Discount values
 * Missing City values
 * Missing Brand values
@@ -255,24 +259,30 @@ This structure allowed filters from dimensions such as Date, Product, Customer, 
    Total Orders = DISTINCTCOUNT(Fact_Sales[Order_ID])
 
 5. Total Product
-   Total Products = DISTINTCOUNT(Dim_Products[Product_ID])
+   Total Products = DISTINTCOUNT(Dim_Products[Product_Name])
 
 6. Total Cost
    Total Cost = SUMX(Fact_Sales,Fact_Sales[Quantity] * RELATED(Dim_Products[Unit_Cost]))
 
-7. Profit Margin
+7. Total Customers
+   Total Customers = DISTINCTCOUNT(Fact_Sales[Customer_ID])
+
+8. Profit Margin
    Profit Margin % = DIVIDE([Total Profit],[Total Sales])
 
-8. Average Order Value
+9. Average Order Value
    Average Order Value = DIVIDE([Total Sales],[Total Orders])
 
-9. Average Quantity per Order
+10. Average Quantity per Order
    Average Quantity per Order = DIVIDE([Total Quantity],[Total Orders])
 
-10. Previous Month Sales
+11. Previous Month Sales
    Previous Month Sales = CALCULATE([Total Sales],DATEADD(Dim_Date[Date], -1, MONTH))
 
-11. Sales Growth %
+12. Previous Year Sales
+    Previous Year Sales = CALCULATE([Total Sales], DATEADD(Dim_Date[Date], -1, YEAR))
+
+13. Sales Growth %
     Sales Growth % = DIVIDE([Total Sales] - [Previous Month Sales],[Previous Month Sales])
 
 ## Dashboard Design
@@ -335,14 +345,14 @@ The analysis includes:
 
 * Sales vs Profit (Monthly Trend)
 * Top 10 Salesperson by Sales
-* Top 10 Customers by Profit
+* Top 10 Customers by Sales
 * Customers by Region
 * Sales vs Profit by Salesperson 
 * Product Performance Summary highlighting the products sold, category, total sales, total orders, total profit, and profit margin %
 
 The same slicers were used to allow users to filter the analysis.
 
-This page moves beyond simply asking “What are sales?” and focuses on “What is driving those sales and how profitable are they?”
+This page moves beyond simply asking “What are sales?” and focuses on “What is driving those sales and how profitable they are.”
 
 #### 3. Management Analysis
 
@@ -353,7 +363,7 @@ The page highlights:
 * Biggest opportunities
 * Biggest problem 
 * Strong-performing segments
-* Worst-performing segments 
+* Weak-performing segments 
 * Products requiring attention
 * Recommended business actions
 
@@ -364,14 +374,13 @@ The goal of this page was to move from data → insight → potential management
 The analysis produced several important findings:
 
 Overall Business Performance:
-The business generated approximately 183.09B in sales and
-42.71B in profit, resulting in an overall 23.33% profit margin.
+The business generated approximately 183.09B in sales and 42.71B in profit, resulting in an overall 23.33% profit margin.
 
 Revenue Performance:
 Computers emerged as the leading revenue-generating product category, while the South South recorded the strongest regional sales performance.
 
 Customer Performance:
-Retail customers contributed the largest share of revenue, making them a key customer segment for the business.
+Retail customers contributed 17.3 billion to the sales, making them a key customer segment for the business.
 
 Sales Trends: 
 January 2025 recorded the highest monthly sales, highlighting a period of particularly strong business activity.
@@ -379,8 +388,7 @@ January 2025 recorded the highest monthly sales, highlighting a period of partic
 Product Performance:
 Flash Drive emerged as the top revenue-generating individual product, followed by other high-performing products such as Mini PC Headset, Scanner, Modem, and Keyboard.
 
-Profitability
-
+Profitability:
 The analysis showed that high revenue does not necessarily mean high profitability. Some products and salespeople generated strong sales while requiring further investigation from a profit-margin perspective.
 
 This was particularly important because management decisions should not be based on revenue alone.
@@ -433,11 +441,10 @@ Through this project, I developed and demonstrated skills in:
 * Exploratory Data Analysis
 * Dashboard Design
 * Business Storytelling
-* Turning data into actionable insights
 
 ## Conclusion
 
-The Business Performance Intelligence Dashboard demonstrates how raw retail data can be transformed into an interactive business intelligence solution.
+The Business Performance Intelligence Dashboard demonstrates how raw data can be transformed into an interactive business intelligence solution.
 
 By combining data preparation, modelling, DAX, visualization, and business analysis, the dashboard provides management with a clearer understanding of sales performance, profitability, customers, products, regions, and areas requiring further attention.
 
